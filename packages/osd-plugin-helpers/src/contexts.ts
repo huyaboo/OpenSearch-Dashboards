@@ -40,6 +40,7 @@ export interface BuildContext {
   sourceDir: string;
   buildDir: string;
   opensearchDashboardsVersion: string;
+  preserveBuildDir?: boolean;
 }
 
 export interface VersionContext {

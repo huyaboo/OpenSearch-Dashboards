@@ -37,9 +37,10 @@ import { BuildContext } from '../contexts';
 
 const asyncMkdir = promisify(Fs.mkdir);
 
-export async function initTargets({ log, sourceDir, buildDir }: BuildContext) {
+export async function initTargets({ log, sourceDir, buildDir, preserveBuildDir }: BuildContext) {
   log.info('deleting the build and target directories');
-  await del(['build', 'target'], {
+  const buildDirToDelete = preserveBuildDir ? 'build/**' : 'build';
+  await del([buildDirToDelete, 'target'], {
     cwd: sourceDir,
   });
 

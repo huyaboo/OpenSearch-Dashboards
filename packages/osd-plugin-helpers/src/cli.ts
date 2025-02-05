@@ -59,7 +59,7 @@ export function runCli() {
 
       `,
       flags: {
-        boolean: ['skip-archive'],
+        boolean: ['skip-archive', 'preserve-build-directory'],
         string: ['opensearch-dashboards-version'],
         alias: {
           k: 'opensearch-dashboards-version',
@@ -67,6 +67,7 @@ export function runCli() {
         help: `
           --skip-archive                       Don't create the zip file, just create the build/opensearch-dashboards directory
           --opensearch-dashboards-version, -k  OpenSearch Dashboards version that the built plugin will target
+          --preserve-build-directory           Don't the build folder during the build process, just delete everything inside it
         `,
       },
       async run({ log, flags }) {
@@ -100,6 +101,10 @@ export function runCli() {
           'build/opensearch-dashboards',
           plugin.manifest.id
         );
+        const preserveBuildDir = flags['preserve-build-directory'];
+        if (preserveBuildDir !== undefined && typeof preserveBuildDir !== 'boolean') {
+          throw createFlagError('expected a single --preserve-build-directory flag');
+        }
 
         const context: BuildContext = {
           log,
@@ -107,6 +112,7 @@ export function runCli() {
           config,
           sourceDir,
           buildDir,
+          preserveBuildDir,
           opensearchDashboardsVersion,
         };
 
